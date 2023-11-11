@@ -21,5 +21,5 @@ char concatStrings(char *str1, char *str2) {
 }
 
 int main() {
-    printf("%d\n", concatStrings("nigga", "balls"));
+    printf("%d\n", concatStrings("", ""));
 }
