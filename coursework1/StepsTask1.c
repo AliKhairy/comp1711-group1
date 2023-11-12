@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,8 +12,11 @@ typedef struct {
 
 // Define any additional variables here
 char line_buffer[100];
-char record;
+char file_name;
 int i = 0;
+char steps_str[100];
+
+
 
 // This is your helper function. Do not change it in any way.
 // Inputs: character array representing a row; the delimiter character
@@ -50,20 +54,20 @@ int main() {
     {
         printf("error opening the file");
     }
-    FITNESS_DATA data [] = {};
-
+    FITNESS_DATA data [1000];
+    
     while (fgets(line_buffer, 100, fitnessdata) != NULL) 
     {
+        tokeniseRecord(line_buffer, ",", data[i].date, data[i].time, steps_str);
+        data[i].steps = atoi(steps_str);
         i++;
-        record = ("%s", line_buffer);
-        tokeniseRecord(record, ",", data->date, data->time, data->steps);
     }
-    printf("Number of records in file: %d", i);
+    printf("Number of records in file: %d\n", i);
     
     for (i = 0; i < 3; i++) 
     {
-        printf("date: %s\n", data[i]->date);
-        printf("time: %s\n", fitness_data[i].time);
-        printf("steps: %d\n", fitness_data[i].steps);
+        printf("%s/%s/%d\n", data[i].date, data[i].time, data[i].steps);
     }
+    fclose(fitnessdata);
+    return 0;
 }
