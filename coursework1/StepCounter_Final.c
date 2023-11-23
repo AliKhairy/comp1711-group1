@@ -10,6 +10,7 @@ char choice;
 int i = 0;
 char line[100];
 FILE *input;
+int keepswitch = 1;
 // Global variables for filename and FITNESS_DATA array
 char filename[50];
 
@@ -46,6 +47,7 @@ void tokeniseRecord(const char *input, const char *delimiter,
 
 // Complete the main function
 int main() {
+    while (keepswitch != 0) {
     printf("A: Specify the filename to be imported\n");
     printf("B: Display the total number of records in the file\n");
     printf("C: Find the date and time of the timeslot with the fewest steps\n");
@@ -55,11 +57,9 @@ int main() {
     printf("Q: Exit\n");
     printf("Enter choice: ");
     choice = getchar();
-    while (getchar() != '\n') {
-
-    };
+    while (getchar() != '\n');
     
-    while (1) {
+    
     switch(choice)
     {
         case 'A':
@@ -74,22 +74,22 @@ int main() {
             return 1;
             }
             else {
-                printf("File opened\n");
-                printf("Filename: %s\n", filename);
+                printf("File successfully loaded.\n");
             }
-            return 0;
             break;
+
 
         case 'B':
         case 'b':
             i = 0;
-            printf("Filename: %s\n", filename);
             while(fgets(line, 100, input) != NULL) {
                 i++;
             }
-            printf("Total records: %d", i);
+            printf("Total records: %d\n", i);
             fclose(input);
+            keepswitch = 0;
             break;
+    
     }
     }
 }
