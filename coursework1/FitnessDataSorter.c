@@ -38,6 +38,7 @@ int main() {
     if (input == NULL)
     {
     printf("Error: File could not be opened\n");
+    return 1;
     }
     int i = 0;
     while (fgets(line_buffer, 100, input) != NULL)
@@ -46,5 +47,5 @@ int main() {
     data[i].steps = atoi(steps_str);
     i++;
     }
-
+    printf("%s %d", data[1].time, data[1].steps);
 }

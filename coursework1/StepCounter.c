@@ -77,7 +77,8 @@ int main() {
             input = fopen(filename, "r");
             if (input == NULL)
             {
-            printf("Error: File could not be opened\n");
+            printf("Incorrectly named data file.\n");
+            return 1;
             keepswitch = 0;
             }
             break;
@@ -88,22 +89,17 @@ int main() {
             i = 0;
             while (fgets(line, 100, input) != NULL)
             {
-            i++;
-            }
-            printf("Total records: %d\n", i);
-            fclose(input);
-            keepswitch = 0;
-            break;
-
-        case 'C':
-        case 'c':
-            i = 0;
-            while (fgets(line, 100, input) != NULL)
-            {
             tokeniseRecord(line, ",", fitnessdata[i].date, fitnessdata[i].time, steps_str);
             fitnessdata[i].steps = atoi(steps_str);
             i++;
             }
+            printf("Total records: %d\n", i);
+            fclose(input);
+            keepswitch = 1;
+            break;
+
+        case 'C':
+        case 'c':
             min = fitnessdata[0].steps;
             for (counter = 0; counter < i; counter++) {
                 if (fitnessdata[counter].steps < min) {
@@ -115,18 +111,11 @@ int main() {
                     printf("Fewest steps: %s %s\n", fitnessdata[counter].date, fitnessdata[counter].time);
                 }
             }
-            keepswitch = 0;
+            keepswitch = 1;
             break;
 
             case 'd':
             case 'D':
-                i = 0;
-            while (fgets(line, 100, input) != NULL)
-            {
-            tokeniseRecord(line, ",", fitnessdata[i].date, fitnessdata[i].time, steps_str);
-            fitnessdata[i].steps = atoi(steps_str);
-            i++;
-            }
             max = fitnessdata[0].steps;
             for (counter = 0; counter < i; counter++) {
                 if (fitnessdata[counter].steps > max) {
@@ -138,37 +127,68 @@ int main() {
                     printf("Largest steps: %s %s\n", fitnessdata[counter].date, fitnessdata[counter].time);
                 }
             }
-            keepswitch = 0;
+            keepswitch = 1;
             break;
 
             case 'e':
             case 'E':
-                i = 0;
-                while (fgets(line, 100, input) != NULL)
-                {
-                tokeniseRecord(line, ",", fitnessdata[i].date, fitnessdata[i].time, steps_str);
-                fitnessdata[i].steps = atoi(steps_str);
-                i++;
-                }
+                
                 for (counter = 0; counter < i; counter++){
                     sum = sum + fitnessdata[counter].steps;
                 }
                 average = sum / i ;
                 rounded_average = round(average);
                 printf("Mean step count: %d\n", rounded_average);
-                keepswitch = 0;
+                keepswitch = 1;
                 break;
 
             case 'F':
             case 'f':
-                i = 0;
-                while (fgets(line, 100, input) != NULL)
                 {
-                tokeniseRecord(line, ",", fitnessdata[i].date, fitnessdata[i].time, steps_str);
-                fitnessdata[i].steps = atoi(steps_str);
-                i++;
+                counter = 0;
+                int longest_period_start = 0;
+                int longest_period_end = 0;
+                int current_period_start = 0;
+                int current_period_end = 0;
+                int longest_period_length = 0;
+                int current_period_length = 0;
+                
+                while (counter < i)
+                {
+                    
+                    
+                    if (fitnessdata[counter].steps > 500) {
+                        if (current_period_length == 0) {
+                            current_period_start = counter;
+                        }
+                        current_period_end = counter;
+                        current_period_length++;
+                        
+                        if (current_period_length > longest_period_length) {
+                            longest_period_start = current_period_start;
+                            longest_period_end = current_period_end;
+                            longest_period_length = current_period_length;
+                        }
+                    } else {
+                        current_period_length = 0;
+                    }
+                    counter++;
                 }
                 
+                if (longest_period_length > 0) {
+                    printf("Longest period start: %s %s\n", fitnessdata[longest_period_start].date, fitnessdata[longest_period_start].time);
+                    printf("Longest period end: %s %s\n", fitnessdata[longest_period_end].date, fitnessdata[longest_period_end].time);
+                } 
+                keepswitch = 1;
+                break;
+                }
+            case 'q':
+            case 'Q':
+                keepswitch = 0;
+                break;
+            default:
+                printf("Please choose one of the options below\n");
+                break;
     }
 }
 }
